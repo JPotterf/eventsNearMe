@@ -5,7 +5,6 @@ import SignedOutMenu from "../Menus/SignedOutMenu";
 import SignedInMenu from "../Menus/SignedInMenu";
 
 class NavBar extends Component {
-  
   state = {
     authenticated: false
   };
@@ -25,9 +24,10 @@ class NavBar extends Component {
             <img src='assets/logo.png' alt='logo' />
             Events Near Me
           </Menu.Item>
-          <Menu.Item as={NavLink} to='/events' name='Events' />
+          <Menu.Item as={NavLink} exact to='/events' name='Events' />
           <Menu.Item as={NavLink} to='/people' name='People' />
           <Menu.Item as={NavLink} to='/map' name='Map' />
+          <Menu.Item as={NavLink} to='/test' name='test' />
           <Menu.Item>
             <Button
               as={Link}
