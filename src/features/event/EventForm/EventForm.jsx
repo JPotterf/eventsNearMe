@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Segment, Form, Button } from "semantic-ui-react";
 import { ECANCELED } from "constants";
+import { ninvoke } from "q";
 
 class EventForm extends Component {
   state = {
@@ -11,9 +12,21 @@ class EventForm extends Component {
     hostedBy: ""
   };
 
+  componentDidMount() {
+    if (this.props.selectedEvent !== null) {
+      this.setState({
+        ...this.props.selectedEvent
+      });
+    }
+  }
+
   handleFormSubmit = evt => {
     evt.preventDefault();
-    this.props.createEvent(this.state);
+    if (this.state.id) {
+      this.props.updateEvent(this.state);
+    } else {
+      this.props.createEvent(this.state);
+    }
   };
 
   handleInputChange = evt => {
