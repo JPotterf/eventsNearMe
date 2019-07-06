@@ -1,5 +1,6 @@
 import React from "react";
 import { Segment, Grid, Icon, Button } from "semantic-ui-react";
+import EventDetailedMap from "./EventDetailedMaps";
 
 const EventDetailedInfo = ({ event }) => {
   return (
@@ -37,6 +38,10 @@ const EventDetailedInfo = ({ event }) => {
           </Grid.Column>
         </Grid>
       </Segment>
+      <EventDetailedMap
+        lat={event.venueLatLng.lat}
+        lng={event.venueLatLng.lng}
+      />
     </Segment.Group>
   );
 };
