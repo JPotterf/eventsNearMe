@@ -5,13 +5,16 @@ import { Button } from "semantic-ui-react";
 import TestPlaceInput from "./TestPlaceInput";
 import SimpleMap from "./SimpleMap";
 import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+import { openModal } from "../modals/modalActions";
+
 const mapState = state => ({
   data: state.test.data
 });
 
 const actions = {
   incrementCounter,
-  decrementCounter
+  decrementCounter,
+  openModal
 };
 
 class TestComponent extends Component {
@@ -21,7 +24,6 @@ class TestComponent extends Component {
       lng: 30.33
     }
   };
-;
   handleSelect = address => {
     geocodeByAddress(address)
       .then(results => getLatLng(results[0]))
@@ -34,13 +36,18 @@ class TestComponent extends Component {
   };
 
   render() {
-    const { data, incrementCounter, decrementCounter } = this.props;
+    const { data, incrementCounter, decrementCounter, openModal } = this.props;
     return (
       <div>
         <h1>Test Components</h1>
         <h3>answer is: {data}</h3>
         <Button onClick={incrementCounter} positive content='Increment' />
         <Button onClick={decrementCounter} negative content='Decrement' />
+        <Button
+          onClick={() => openModal("TestModal", { data: 42 })}
+          color='teal'
+          content='Modal'
+        />
         <br />
         <br />
         <br />
