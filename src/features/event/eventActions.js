@@ -10,21 +10,36 @@ import {
   asyncActionError
 } from "../async/asyncActions";
 import { fetchSampleData } from "../../app/data/mockAPI";
+import { toastr } from "react-redux-toastr";
 
 export const createEvent = event => {
-  return {
-    type: CREATE_EVENT,
-    payload: {
-      event
+  return async dispatch => {
+    try {
+      dispatch({
+        type: CREATE_EVENT,
+        payload: {
+          event
+        }
+      });
+      toastr.success("Success!", "Event Created");
+    } catch (error) {
+      toastr.error("Oops", "Something went wrong");
     }
   };
 };
 
 export const updateEvent = event => {
-  return {
-    type: UPDATE_EVENT,
-    payload: {
-      event
+  return async dispatch => {
+    try {
+      dispatch({
+        type: UPDATE_EVENT,
+        payload: {
+          event
+        }
+      });
+      toastr.success("Success!", "Event Updated");
+    } catch (error) {
+      toastr.error("Oops", "Something went wrong");
     }
   };
 };
