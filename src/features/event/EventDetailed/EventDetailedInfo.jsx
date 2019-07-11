@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Segment, Grid, Icon, Button } from "semantic-ui-react";
 import EventDetailedMap from "./EventDetailedMaps";
-import { format, parseISO } from "date-fns";
 
 const EventDetailedInfo = ({ event }) => {
   const [isMapOpen, showMapToggle] = useState(false);
@@ -23,9 +22,7 @@ const EventDetailedInfo = ({ event }) => {
             <Icon name='calendar' size='large' color='teal' />
           </Grid.Column>
           <Grid.Column width={15}>
-            {event.date && (
-              <span>{format(parseISO(event.date), "EEEE do LLLL")}</span>
-            )}
+            <span>{event.date}</span>
           </Grid.Column>
         </Grid>
       </Segment>

@@ -1,10 +1,16 @@
-import React from "react";
+import React, { Fragment } from "react";
+import MainMap from "./MainMap";
+import { Grid } from "semantic-ui-react";
 
 const MapDashboard = () => {
   return (
-    <div>
-      <h1>Map Page</h1>
-    </div>
+    <Fragment className='mapDashboard'>
+      <Grid>
+        <Grid.Column width={16}>
+          <MainMap />
+        </Grid.Column>
+      </Grid>
+    </Fragment>
   );
 };
 

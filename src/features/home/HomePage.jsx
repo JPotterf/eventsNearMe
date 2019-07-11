@@ -13,7 +13,7 @@ import {
 const HomePage = ({ history }) => {
   return (
     <Segment inverted textAlign='center' vertical className='masthead'>
-      <Container text>
+      <Container text className='center-text'>
         <Header as='h1' inverted>
           <Image
             size='massive'
@@ -21,12 +21,12 @@ const HomePage = ({ history }) => {
             alt='logo'
             style={{ marginBottom: 12 }}
           />
-          Event Tracker
+          Hey Helsinki!
         </Header>
-        <h3>
+        <h2>
           Find an event and make some new friends! Start an event and invite
           people you know!
-        </h3>
+        </h2>
         <Button onClick={() => history.push("/events")} size='huge' inverted>
           Get started
           <Icon name='right arrow' inverted />

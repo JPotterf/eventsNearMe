@@ -41,7 +41,7 @@ const PlaceInput = ({
               }}
             >
               {loading && <div>Loading...</div>}
-              <List seletion>
+              <List selection>
                 {suggestions.map(suggestion => (
                   <List.Item {...getSuggestionItemProps(suggestion)}>
                     <List.Header>

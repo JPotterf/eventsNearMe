@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { Segment, Item, Icon, List, Button } from "semantic-ui-react";
+import { Segment, Item, List, Button, Label } from "semantic-ui-react";
 import EventListAttendee from "./EventListAttendee";
 import { Link } from "react-router-dom";
-import { format, parseISO } from "date-fns";
 
 class EventListItem extends Component {
   render() {
-    const { event, deleteEvent } = this.props;
+    const { event } = this.props;
     return (
       <Segment.Group>
         <Segment>
@@ -16,22 +15,26 @@ class EventListItem extends Component {
               <Item.Content>
                 <Item.Header as='a'>{event.title}</Item.Header>
                 <Item.Description>Hosted by {event.hostedBy}</Item.Description>
+                <Item.Description>{event.date}</Item.Description>
+                {event.cancelled && (
+                  <Label
+                    style={{ top: "-30px" }}
+                    ribbon='right'
+                    color='red'
+                    content='This Event has been Cancelled'
+                  />
+                )}
               </Item.Content>
             </Item>
           </Item.Group>
         </Segment>
-        <Segment>
-          <span>
-            <Icon name='clock' /> {format(parseISO(event.date), "EEEE do LLL")}{" "}
-            at {format(parseISO(event.date), "h:mm a")} |
-            <Icon name='marker' /> {event.venue}
-          </span>
-        </Segment>
         <Segment secondary>
           <List horizontal>
+            {/* firebase db saves attendees as object not array  */}
+            {/* index === index of array in db */}
             {event.attendees &&
-              event.attendees.map(attendee => (
-                <EventListAttendee key={attendee.id} attendee={attendee} />
+              Object.values(event.attendees).map((attendee, index) => (
+                <EventListAttendee key={index} attendee={attendee} />
               ))}
           </List>
         </Segment>
@@ -39,19 +42,11 @@ class EventListItem extends Component {
           <span>{event.description}</span>
 
           <Button
-            onClick={() => deleteEvent(event.id)}
-            as='a'
-            color='red'
-            floated='right'
-            content='Delete Event'
-          />
-
-          <Button
             as={Link}
             to={`/events/${event.id}`}
             color='teal'
             floated='right'
-            content='View'
+            content='View The Event Details'
           />
         </Segment>
       </Segment.Group>
