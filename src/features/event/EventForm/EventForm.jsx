@@ -63,8 +63,7 @@ const category = [
   { key: "film", text: "Film", value: "film" },
   { key: "food", text: "Food", value: "food" },
   { key: "music", text: "Music", value: "music" },
-  { key: "sport", text: "Sport", value: "sport"},
-  { key: "travel", text: "Travel", value: "travel" }
+  { key: "sport", text: "Sport", value: "sport"}
 ];
 
 class EventForm extends Component {
@@ -172,7 +171,7 @@ class EventForm extends Component {
                       types: ["establishment"]
                     }}
                     onSelect={this.handleVenueSelect}
-                    placeholder='Whats the name of the venue location?'
+                    placeholder='Helsinki Venue...'
                   />
                   <Field
                     name='date'
@@ -282,13 +281,7 @@ class EventForm extends Component {
                   >
                     Cancel
                   </Button>
-                  <Button
-                    type='button'
-                    color={event.cancelled ? "green" : "red"}
-                    floated='right'
-                    content={event.cancelled ? "Reactivate Event" : "Cancel Event"}
-                    onClick={() => cancelToggle(!event.cancelled, event.id)}
-                  />
+
                 </Form>
               </Segment>
           </div>

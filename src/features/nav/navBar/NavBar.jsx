@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { Menu, Container, Button,  Responsive } from "semantic-ui-react";
+import { Menu, Container, Button, Responsive } from "semantic-ui-react";
 import { NavLink, Link, withRouter } from "react-router-dom";
 import { withFirebase } from "react-redux-firebase";
 import SignedOutMenu from "../Menus/SignedOutMenu";
@@ -36,11 +36,10 @@ class NavBar extends Component {
     const authenticated = auth.isLoaded && !auth.isEmpty;
     return (
       <Fragment>
-        <Responsive minWidth={800}>  
+        <Responsive minWidth={800}>
           <Menu inverted fixed='top'>
             <Container>
               <Menu.Item style={{}} as={NavLink} exact to='/' header>
-                <img src='/assets/logo.png' alt='logo' />
                 Helsinki Events
               </Menu.Item>
               <Menu.Item as={NavLink} exact to='/events' name='Events' />
@@ -73,32 +72,28 @@ class NavBar extends Component {
               )}
             </Container>
           </Menu>
-         </Responsive>
+        </Responsive>
 
-         <Responsive maxWidth={799}> 
-         
-         <Menu inverted fixed='top'>
-            <Container> 
-              <Menu.Item style={{}} as={NavLink} exact to='/' header>
-                <img src='/assets/logo.png' alt='logo' />
-              </Menu.Item>
+        <Responsive maxWidth={799}>
+          <Menu inverted fixed='top'>
+            <Container>
               <Menu.Item as={NavLink} exact to='/events' name='Events' />
               <Menu.Item as={NavLink} to='/map' name='Map' />
-                {authenticated ? (
-                  <SignedInMenu
-                    auth={auth}
-                    profile={profile}
-                    SignOut={this.handleSignOut}  
-                  />
-                ) : (
-                  <SignedOutMenu
-                    SignIn={this.handleSignIn}
-                    register={this.handleRegister}
-                  />
-                )}
+              {authenticated ? (
+                <SignedInMenu
+                  auth={auth}
+                  profile={profile}
+                  SignOut={this.handleSignOut}
+                />
+              ) : (
+                <SignedOutMenu
+                  SignIn={this.handleSignIn}
+                  register={this.handleRegister}
+                />
+              )}
             </Container>
           </Menu>
-         </Responsive> 
+        </Responsive>
       </Fragment>
     );
   }

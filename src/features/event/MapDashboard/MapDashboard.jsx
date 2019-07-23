@@ -24,7 +24,7 @@ class Map extends Component {
 
   getHelsinkiEvents = () => {
     const endPoint =
-      "https://api.hel.fi/linkedevents/v1/place/?page_size=30&event=true";
+      "https://api.hel.fi/linkedevents/v1/place/?page_size=50&event=true";
 
     axios
       .get(endPoint)
@@ -71,7 +71,14 @@ class Map extends Component {
     let infowindow = new window.google.maps.InfoWindow();
 
     this.state.HelsinkiEvents.map(event => {
-      let contentString = `<h3>${event.name.en}</h3>` 
+      let contentString = `<h3>${event.name.en}</h3>`;
+
+      let icon = {
+        url: "https://jacobpotterf.com/css/img/map-marker.png", // url
+        scaledSize: new window.google.maps.Size(18, 18), // scaled size
+        origin: new window.google.maps.Point(0, 0), // origin
+        anchor: new window.google.maps.Point(0, 0) // anchor
+      };
 
       if (event.position === null) {
         let marker = new window.google.maps.Marker({
@@ -86,6 +93,7 @@ class Map extends Component {
             lat: event.position.coordinates[1],
             lng: event.position.coordinates[0]
           },
+          icon: icon,
           map: map,
           title: event.name.en
         });
@@ -97,9 +105,6 @@ class Map extends Component {
       }
     });
 
-    
-
-    
     // ////creating markers from user created evevnts
     this.state.UserCreatedEvents.map(event => {
       //console.log(event.fields.venueLatLng.mapValue)
@@ -107,62 +112,59 @@ class Map extends Component {
       let eventId = event.name.slice(-20);
       let contentString = `
         <h3>${event.fields.title.stringValue}</h3>
-        <p><b>Category:</b>  ${eventType}</p>
+        <p><b>Type of Event: </b>${eventType}</p>
         <p>${event.fields.description.stringValue}</p>
-        <a href="./events/${eventId}" <p>Event Page for more information </p></a>
+        <a href="./events/${eventId}" <p>Click here to visit the events page</p></a>
         `;
-        const basePath = "https://jacobpotterf.com/css/img/"
-        const icons = {
-          food:{
-            icon: basePath+"food.png"
-          },
-          drinks:{
-            icon: basePath+"drink.png"
-          },
-          film:{
-            icon: basePath+"film.png"
-          },
-          music:{
-            icon: basePath+"music.png"
-          },
-          sport:{
-            icon: basePath+"sport.png"
-          },
-          travel:{
-            icon: basePath+"travel.png"
-          },
-          culture:{
-            icon: basePath+"culture.png"
-          }
-        }   
-        
-
-        let icon ={
-          url: icons[eventType].icon, // url
-          scaledSize: new window.google.maps.Size(30, 30), // scaled size
-          origin: new window.google.maps.Point(0,0), // origin
-          anchor: new window.google.maps.Point(0, 0) // anchor
+      const basePath = "https://jacobpotterf.com/css/img/";
+      const icons = {
+        food: {
+          icon: basePath + "food.png"
+        },
+        drinks: {
+          icon: basePath + "drink.png"
+        },
+        film: {
+          icon: basePath + "film.png"
+        },
+        music: {
+          icon: basePath + "music.png"
+        },
+        sport: {
+          icon: basePath + "sport.png"
+        },
+        travel: {
+          icon: basePath + "travel.png"
+        },
+        culture: {
+          icon: basePath + "culture.png"
         }
+      };
 
-        let marker = new window.google.maps.Marker({
-            position: {
-            lat: event.fields.venueLatLng.mapValue.fields.lat.doubleValue,
-            lng: event.fields.venueLatLng.mapValue.fields.lng.doubleValue
-            },  
-            icon: icon,      
-            title: event.title,
-            map: map,
-        });
-        
-    //open infowindow on markerclick
-        marker.addListener("click", function() {
-            infowindow.setContent(contentString);
-            infowindow.open(map, marker);
-        });
+      let icon = {
+        url: icons[eventType].icon, // url
+        scaledSize: new window.google.maps.Size(30, 30), // scaled size
+        origin: new window.google.maps.Point(0, 0), // origin
+        anchor: new window.google.maps.Point(0, 0) // anchor
+      };
+
+      let marker = new window.google.maps.Marker({
+        position: {
+          lat: event.fields.venueLatLng.mapValue.fields.lat.doubleValue,
+          lng: event.fields.venueLatLng.mapValue.fields.lng.doubleValue
+        },
+        icon: icon,
+        title: event.title,
+        map: map
+      });
+
+      //open infowindow on markerclick
+      marker.addListener("click", function() {
+        infowindow.setContent(contentString);
+        infowindow.open(map, marker);
+      });
     });
 
-
-  
     ////////
   };
   render() {

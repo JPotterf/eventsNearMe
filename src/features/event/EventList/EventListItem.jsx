@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Segment, Item, List, Button, Label, Responsive } from "semantic-ui-react";
+import {
+  Segment,
+  Item,
+  List,
+  Button,
+  Label,
+  Responsive
+} from "semantic-ui-react";
 import EventListAttendee from "./EventListAttendee";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
@@ -12,11 +19,17 @@ class EventListItem extends Component {
         <Segment>
           <Item.Group>
             <Item>
-            <Responsive minWidth={720}>
-              <Item.Image style={{margin:".5em"}} size='tiny' circular src={event.hostPhotoURL} />
-            </Responsive>  
-              <Item.Content style={{margin:".5em"}} >
-                <Item.Header >{event.title}</Item.Header>
+              <Responsive minWidth={720}>
+                <Item.Image
+                  style={{ margin: ".5em" }}
+                  size='tiny'
+                  circular
+                  src={event.hostPhotoURL}
+                />
+              </Responsive>
+              
+              <Item.Content style={{ margin: ".5em" }}>
+                <Item.Header>{event.title}</Item.Header>
                 <Item.Description>Hosted by {event.hostedBy}</Item.Description>
                 <Item.Description>
                   {format(event.date.toDate(), "EEEE do LLLL")} at{" "}
@@ -30,7 +43,7 @@ class EventListItem extends Component {
                     content='This Event has been Cancelled'
                   />
                 )}
-              </Item.Content> 
+              </Item.Content>
             </Item>
           </Item.Group>
         </Segment>
@@ -47,12 +60,12 @@ class EventListItem extends Component {
         <Segment clearing>
           <div>
             <span>{event.description}</span>
-          </div>      
-          <Button 
-            style={{margin:"1.5em"}}
+          </div>
+          <Button
+            style={{ margin: "1.5em" }}
             as={Link}
             to={`/events/${event.id}`}
-            color= "blue"
+            color='blue'
             floated='right'
             content='View The Event Details'
           />

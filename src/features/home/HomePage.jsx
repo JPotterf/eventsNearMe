@@ -3,7 +3,6 @@ import {
   Segment,
   Container,
   Header,
-  Image,
   Button,
   Icon
 } from "semantic-ui-react";
@@ -15,12 +14,6 @@ const HomePage = ({ history }) => {
     <Segment inverted textAlign='center' vertical className='masthead'>
       <Container text className='center-text'>
         <Header as='h1' inverted>
-          <Image
-            size='massive'
-            src='/assets/logo.png'
-            alt='logo'
-            style={{ marginBottom: 12 }}
-          />
           Hey Helsinki!
         </Header>
         <h2>
