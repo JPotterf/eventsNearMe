@@ -7,8 +7,6 @@ class EventListAttendee extends Component {
     return (
       <List.Item>
         <Image
-          // as={Link}
-          // to={`/profile/${attendee.id}`}
           size='mini'
           circular
           src={attendee.photoURL}

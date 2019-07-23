@@ -27,9 +27,9 @@ const HomePage = ({ history }) => {
           Find an event and make some new friends! Start an event and invite
           people you know!
         </h2>
-        <Button onClick={() => history.push("/events")} size='huge' inverted>
+        <Button onClick={() => history.push("/events")} size='huge' style={{color:"black"}}>
           Get started
-          <Icon name='right arrow' inverted />
+          <Icon name='right arrow' />
         </Button>
       </Container>
     </Segment>

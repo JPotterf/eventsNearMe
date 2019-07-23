@@ -4,9 +4,10 @@ import {
   asyncActionFinish,
   asyncActionError
 } from "../async/asyncActions";
-import { fetchSampleData } from "../../app/data/mockAPI";
+
 import { toastr } from "react-redux-toastr";
 import { createNewEvent } from "../../app/common/util/helpers";
+import firebase from "../../app/config/firebase";
 
 export const createEvent = event => {
   return async (dispatch, getState, { getFirestore, getFirebase }) => {
@@ -16,7 +17,6 @@ export const createEvent = event => {
     const photoURL = getState().firebase.profile.photoURL;
     const newEvent = createNewEvent(user, photoURL, event);
     try {
-      // add new event to the events collection in firestore db
       let createdEvent = await firestore.add("events", newEvent);
       // use event id and user id as event attendee object to stop user from
       //double attending an event
@@ -69,19 +69,7 @@ export const cancelToggle = (cancelled, eventId) => async (
   }
 };
 
-export const loadEvents = () => {
-  return async dispatch => {
-    try {
-      dispatch(asyncActionStart());
-      const events = await fetchSampleData();
-      dispatch({ type: FETCH_EVENTS, payload: { events } });
-      dispatch(asyncActionFinish());
-    } catch (error) {
-      console.log(error);
-      dispatch(asyncActionError());
-    }
-  };
-};
+
 
 export const goingToEvent = event => async (
   dispatch,
@@ -138,3 +126,63 @@ export const cancelGoingToEvent = event => async (
     toastr.error("Oops", "There has been an error");
   }
 };
+
+// lastEvent is last event returned that is displayed in event dashboard
+// and used as a start point for all other events displayed in the dashboard
+// orderd by event.date
+export const getEventsForDashboard = lastEvent => async (
+  dispatch,
+  getState
+) => {
+  //let today = new Date();
+  const firestore = firebase.firestore();
+  const eventsRef = firestore.collection("events");
+  try {
+    dispatch(asyncActionStart());
+    let startAfter =
+      lastEvent &&
+      (await firestore
+        .collection("events")
+        .doc(lastEvent.id)
+        .get());
+    let query;
+
+    //building the firebase query
+    //on initial load load all events from today ordered by date
+    //on pagination event start at lastEvent prop.
+    lastEvent
+      ? (query = eventsRef
+          // .where("date", ">=", today)
+          .orderBy("date")
+          .startAfter(startAfter)
+          .limit(2))
+      : (query = eventsRef
+          // .where("date", ">=", today)
+          .orderBy("date")
+          .limit(3));
+    //send the query
+    let querySnap = await query.get();
+
+    //if no events to retrieve break out of func
+    if (querySnap.docs.length === 0) {
+      dispatch(asyncActionFinish());
+      return querySnap;
+    }
+
+    let events = [];
+    //pushing every event recieved from the querySnap to the empty events array
+    for (let i = 0; i < querySnap.docs.length; i++) {
+      //data() retrieves all fields in documents as object
+      let evt = { ...querySnap.docs[i].data(), id: querySnap.docs[i].id };
+      events.push(evt);
+    }
+    //send the events array using eventReducer FETCH_EVENTS
+    dispatch({ type: FETCH_EVENTS, payload: { events } });
+    dispatch(asyncActionFinish());
+    return querySnap;
+  } catch (error) {
+    console.log(error);
+    dispatch(asyncActionError());
+  }
+};
+

@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { Menu, Container, Button } from "semantic-ui-react";
+import { Menu, Container, Button,  Responsive } from "semantic-ui-react";
 import { NavLink, Link, withRouter } from "react-router-dom";
 import { withFirebase } from "react-redux-firebase";
 import SignedOutMenu from "../Menus/SignedOutMenu";
@@ -35,44 +35,71 @@ class NavBar extends Component {
     // uses withFirebase props to check login === true
     const authenticated = auth.isLoaded && !auth.isEmpty;
     return (
-      <Menu inverted fixed='top'>
-        <Container>
-          <Menu.Item as={NavLink} exact to='/' header>
-            <img src='assets/logo.png' alt='logo' />
-            Events Near Me
-          </Menu.Item>
-          <Menu.Item as={NavLink} exact to='/events' name='Events' />
-          <Menu.Item as={NavLink} to='/map' name='Map' />
-          {authenticated && (
-            <Fragment>
-              <Menu.Item as={NavLink} to='/test' name='test' />
-              <Menu.Item>
-                <Button
-                  as={Link}
-                  to='/createEvent'
-                  floated='right'
-                  positive
-                  inverted
-                  content='Create Event'
-                />
+      <Fragment>
+        <Responsive minWidth={800}>  
+          <Menu inverted fixed='top'>
+            <Container>
+              <Menu.Item style={{}} as={NavLink} exact to='/' header>
+                <img src='/assets/logo.png' alt='logo' />
+                Helsinki Events
               </Menu.Item>
-            </Fragment>
-          )}
+              <Menu.Item as={NavLink} exact to='/events' name='Events' />
+              <Menu.Item as={NavLink} to='/map' name='Map' />
+              {authenticated && (
+                <Fragment>
+                  <Menu.Item>
+                    <Button
+                      as={Link}
+                      to='/createEvent'
+                      floated='right'
+                      inverted
+                      content='Create Event'
+                    />
+                  </Menu.Item>
+                </Fragment>
+              )}
 
-          {authenticated ? (
-            <SignedInMenu
-              auth={auth}
-              profile={profile}
-              SignOut={this.handleSignOut}
-            />
-          ) : (
-            <SignedOutMenu
-              SignIn={this.handleSignIn}
-              register={this.handleRegister}
-            />
-          )}
-        </Container>
-      </Menu>
+              {authenticated ? (
+                <SignedInMenu
+                  auth={auth}
+                  profile={profile}
+                  SignOut={this.handleSignOut}
+                />
+              ) : (
+                <SignedOutMenu
+                  SignIn={this.handleSignIn}
+                  register={this.handleRegister}
+                />
+              )}
+            </Container>
+          </Menu>
+         </Responsive>
+
+         <Responsive maxWidth={799}> 
+         
+         <Menu inverted fixed='top'>
+            <Container> 
+              <Menu.Item style={{}} as={NavLink} exact to='/' header>
+                <img src='/assets/logo.png' alt='logo' />
+              </Menu.Item>
+              <Menu.Item as={NavLink} exact to='/events' name='Events' />
+              <Menu.Item as={NavLink} to='/map' name='Map' />
+                {authenticated ? (
+                  <SignedInMenu
+                    auth={auth}
+                    profile={profile}
+                    SignOut={this.handleSignOut}  
+                  />
+                ) : (
+                  <SignedOutMenu
+                    SignIn={this.handleSignIn}
+                    register={this.handleRegister}
+                  />
+                )}
+            </Container>
+          </Menu>
+         </Responsive> 
+      </Fragment>
     );
   }
 }

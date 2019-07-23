@@ -5,12 +5,10 @@ import { Container } from "semantic-ui-react";
 import { Route, Switch, withRouter } from "react-router-dom";
 import HomePage from "../../features/home/HomePage";
 import EventDetailedPage from "../../features/event/EventDetailed/EventDetailedPage";
-
-//import { UserIsAuthenticated } from '../../features/auth/AuthWrapper';
 import EventForm from "../../features/event/EventForm/EventForm";
 import MapDashboard from "../../features/event/MapDashboard/MapDashboard";
-import TestComponent from "../../features/testArea/TestComponents";
 import ModalManager from "../../features/modals/ModalManager";
+import NotFound from "./NotFound";
 
 class App extends Component {
   render() {
@@ -32,7 +30,7 @@ class App extends Component {
                     path={["/createEvent", "/manage/:id"]}
                     component={EventForm}
                   />
-                  <Route path='/test' component={TestComponent} />
+                  <Route component={NotFound}/>
                 </Switch>
               </Container>
             </Fragment>

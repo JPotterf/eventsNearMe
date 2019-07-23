@@ -1,5 +1,5 @@
 /*global google */
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
@@ -9,7 +9,7 @@ import {
   isRequired,
   hasLengthGreaterThan
 } from "revalidate";
-import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
+import { Segment, Form, Button, Grid, Header, Responsive } from "semantic-ui-react";
 import { withFirestore } from "react-redux-firebase";
 import { createEvent, updateEvent, cancelToggle } from "../eventActions";
 import TextInput from "../../../app/common/form/TextInput";
@@ -53,7 +53,6 @@ const validate = combineValidators({
       message: "Please provide a description at least 3 characters long"
     })
   )(),
-  city: isRequired("city"),
   venue: isRequired("venue"),
   date: isRequired("date")
 });
@@ -64,13 +63,14 @@ const category = [
   { key: "film", text: "Film", value: "film" },
   { key: "food", text: "Food", value: "food" },
   { key: "music", text: "Music", value: "music" },
+  { key: "sport", text: "Sport", value: "sport"},
   { key: "travel", text: "Travel", value: "travel" }
 ];
 
 class EventForm extends Component {
   state = {
     cityLatLng: {},
-    venueLatLng: {}
+    venueLatLng: {lat:0,lng:0}
   };
 
   async componentDidMount() {
@@ -105,25 +105,12 @@ class EventForm extends Component {
     }
   };
 
-  handleCitySelect = selectedCity => {
-    geocodeByAddress(selectedCity)
-      .then(results => getLatLng(results[0]))
-      .then(latlng => {
-        this.setState({
-          cityLatLng: latlng
-        });
-      })
-      .then(() => {
-        this.props.change("city", selectedCity);
-      });
-  };
-
   handleVenueSelect = selectedVenue => {
     geocodeByAddress(selectedVenue)
       .then(results => getLatLng(results[0]))
       .then(latlng => {
         this.setState({
-          venueLatLng: latlng
+          venueLatLng: latlng 
         });
       })
       .then(() => {
@@ -142,93 +129,171 @@ class EventForm extends Component {
       cancelToggle
     } = this.props;
     return (
-      <Grid>
-        <Grid.Column width={10}>
-          <Segment>
-            <Header color='teal' align='center' content='Event Details' />
-            <Form
-              onSubmit={this.props.handleSubmit(this.onFormSubmit)}
-              autoComplete='off'
-            >
-              <Field
-                name='title'
-                component={TextInput}
-                placeholder='Event Title'
-              />
-              <Field
-                name='category'
-                component={SelectInput}
-                options={category}
-                // multiple={true}
-                placeholder='Type of Event'
-              />
-              <Field
-                name='description'
-                component={TextArea}
-                rows={3}
-                placeholder='Describe The Event'
-              />
-              <Header
-                sub
-                color='teal'
-                align='center'
-                content='Event Location Details'
-              />
-              <Field
-                name='city'
-                component={PlaceInput}
-                options={{ types: ["(cities)"] }}
-                onSelect={this.handleCitySelect}
-                placeholder='Event City'
-              />
-              <Field
-                name='venue'
-                component={PlaceInput}
-                options={{
-                  location: new google.maps.LatLng(this.state.cityLatLng),
-                  radius: 1000,
-                  types: ["establishment"]
-                }}
-                onSelect={this.handleVenueSelect}
-                placeholder='Venue Location'
-              />
-              <Field
-                name='date'
-                component={DateInput}
-                dateFormat='dd LLL yyyy h:mm a'
-                showTimeSelect
-                timeFormat='HH:mm'
-                placeholder='Event Date'
-              />
+      <Fragment>
+        <Responsive minWidth={800}>
+          <Grid>
+            <Grid.Column className="centered" width={10}>
+              <Segment>
+                <Header color='teal' align='center' content='Event Details' />
+                <Form
+                  onSubmit={this.props.handleSubmit(this.onFormSubmit)}
+                  autoComplete='off'
+                >
+                  <Field
+                    name='title'
+                    component={TextInput}
+                    placeholder='Event Title'
+                  />
+                  <Field
+                    name='category'
+                    component={SelectInput}
+                    options={category}
+                    placeholder='Type of Event'
+                  />
+                  <Field
+                    name='description'
+                    component={TextArea}
+                    rows={3}
+                    placeholder='Describe The Event'
+                  />
+                  <Header
+                    color='teal'
+                    align='center'
+                    content='Helsinki Event Location Details'
+                  />
 
-              <Button
-                disabled={invalid || submitting || pristine}
-                positive
-                type='submit'
-              >
-                Submit
-              </Button>
-              <Button
-                type='button'
-                onClick={
-                  initialValues.id
-                    ? () => history.push(`/events/${initialValues.id}`)
-                    : () => history.push("/events")
-                }
-              >
-                Cancel
-              </Button>
-              <Button
-                type='button'
-                color={event.cancelled ? "green" : "red"}
-                floated='right'
-                content={event.cancelled ? "Reactivate Event" : "Cancel Event"}
-                onClick={() => cancelToggle(!event.cancelled, event.id)}
-              />
-            </Form>
-          </Segment>
-        </Grid.Column>
-      </Grid>
+                  <Field
+                    name='venue'
+                    component={PlaceInput}
+                    options={{
+                      location: new google.maps.LatLng(60.170992, 24.940776),
+                      //Hard coded Helsinki latlng,
+                      radius: 1000,
+                      types: ["establishment"]
+                    }}
+                    onSelect={this.handleVenueSelect}
+                    placeholder='Whats the name of the venue location?'
+                  />
+                  <Field
+                    name='date'
+                    component={DateInput}
+                    dateFormat='dd LLLL yyyy h:mm a'
+                    showTimeSelect
+                    timeFormat='HH:mm'
+                    placeholder='Event Date?'
+                  />
+
+                  <Button
+                    disabled={invalid || submitting || pristine}
+                    positive
+                    type='submit'
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    type='button'
+                    onClick={
+                      initialValues.id
+                        ? () => history.push(`/events/${initialValues.id}`)
+                        : () => history.push("/events")
+                    }
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type='button'
+                    color={event.cancelled ? "green" : "red"}
+                    floated='right'
+                    content={event.cancelled ? "Reactivate Event" : "Cancel Event"}
+                    onClick={() => cancelToggle(!event.cancelled, event.id)}
+                  />
+                </Form>
+              </Segment>
+            </Grid.Column>
+          </Grid>
+        </Responsive>
+        <Responsive maxWidth={799}>
+          <div class="cards" className='centered'>
+              <Segment>
+                <Header color='teal' align='center' content='Event Details' />
+                <Form
+                  onSubmit={this.props.handleSubmit(this.onFormSubmit)}
+                  autoComplete='off'
+                >
+                  <Field
+                    name='title'
+                    component={TextInput}
+                    placeholder='Event Title'
+                  />
+                  <Field
+                    name='category'
+                    component={SelectInput}
+                    options={category}
+                    multiple={true}
+                    placeholder='Type of Event'
+                  />
+                  <Field
+                    name='description'
+                    component={TextArea}
+                    rows={3}
+                    placeholder='Describe The Event'
+                  />
+                  <Header
+                    color='teal'
+                    align='center'
+                    content='Helsinki Event Location Details'
+                  />
+
+                  <Field
+                    name='venue'
+                    component={PlaceInput}
+                    options={{
+                      location: new google.maps.LatLng(60.170992, 24.940776),
+                      //Hard coded Helsinki latlng,
+                      radius: 1000,
+                      types: ["establishment"]
+                    }}
+                    onSelect={this.handleVenueSelect}
+                    placeholder='Whats the name of the venue location?'
+                  />
+                  <Field
+                    name='date'
+                    component={DateInput}
+                    dateFormat='dd LLLL yyyy h:mm a'
+                    showTimeSelect
+                    timeFormat='HH:mm'
+                    placeholder='Event Date?'
+                  />
+
+                  <Button
+                    disabled={invalid || submitting || pristine}
+                    positive
+                    type='submit'
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    type='button'
+                    onClick={
+                      initialValues.id
+                        ? () => history.push(`/events/${initialValues.id}`)
+                        : () => history.push("/events")
+                    }
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type='button'
+                    color={event.cancelled ? "green" : "red"}
+                    floated='right'
+                    content={event.cancelled ? "Reactivate Event" : "Cancel Event"}
+                    onClick={() => cancelToggle(!event.cancelled, event.id)}
+                  />
+                </Form>
+              </Segment>
+          </div>
+        </Responsive>  
+      </Fragment>
     );
   }
 }

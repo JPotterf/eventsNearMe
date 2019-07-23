@@ -1,12 +1,13 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { Grid } from "semantic-ui-react";
+import { Grid, Responsive } from "semantic-ui-react";
 import EventDetailedHeader from "./EventDetailedHeader";
 import EventDetailedInfo from "./EventDetailedInfo";
 import EventDetailedSidebar from "./EventDetailedSidebar";
 import { withFirestore } from "react-redux-firebase";
 import { objectToArray } from "../../../app/common/util/helpers";
 import { goingToEvent, cancelGoingToEvent } from "../eventActions";
+import NotFound from "../../../app/layout/NotFound";
 
 const mapState = (state, ownProps) => {
   //recieve eventID from props
@@ -52,27 +53,51 @@ class EventDetailedPage extends Component {
       event && event.attendees && objectToArray(event.attendees);
     //check the logged in users id to the event host's id
     const isHost = event.hostUid === auth.uid;
+    const isUser = auth.uid;
     //check the array of attendees id's for the users id
     //some() returns true if any of its arguments returns true
     const isGoing = attendees && attendees.some(a => a.id === auth.uid);
 
+    if(Object.keys(event).length === 0)return<NotFound/>
     return (
-      <Grid>
-        <Grid.Column width={10}>
-          <EventDetailedHeader
+      <Fragment>
+       <Responsive minWidth={800}> 
+       <Grid>
+         <Grid.Column width={10}>
+           <EventDetailedHeader
             event={event}
             isGoing={isGoing}
             isHost={isHost}
+            isUser={isUser}
             goingToEvent={goingToEvent}
             cancelGoingToEvent={cancelGoingToEvent}
           />
           <EventDetailedInfo event={event} />
-          {/* <EventDetailedChat event={event} /> */}
+          
         </Grid.Column>
         <Grid.Column width={6}>
-          <EventDetailedSidebar attendees={attendees} />
-        </Grid.Column>
+            <EventDetailedSidebar attendees={attendees} />
+          </Grid.Column>
       </Grid>
+      </Responsive>
+      
+      <Responsive maxWidth={799}>    
+        <div class="cards" className="centered">
+          <EventDetailedHeader
+            event={event}
+            isGoing={isGoing}
+            isHost={isHost}
+            isUser={isUser}
+            goingToEvent={goingToEvent}
+            cancelGoingToEvent={cancelGoingToEvent}
+          />
+          <EventDetailedInfo event={event} />
+        </div>  
+        <div>     
+          <EventDetailedSidebar attendees={attendees} />
+        </div>
+        </Responsive>
+    </Fragment>
     );
   }
 }

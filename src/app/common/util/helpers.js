@@ -9,10 +9,11 @@ export const objectToArray = object => {
     );
   }
 };
-
+//  //date: firebase.firestore.Timestamp.fromDate(event.date)
 export const createNewEvent = (user, photoURL, event) => {
   return {
     ...event,
+    date: new Date(event.date),
     hostUid: user.uid,
     hostedBy: user.displayName,
     hostPhotoURL: photoURL || `https://i.pravatar.cc/150?u=${user.uid}`,

@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { Segment, Item, List, Button, Label } from "semantic-ui-react";
+import { Segment, Item, List, Button, Label, Responsive } from "semantic-ui-react";
 import EventListAttendee from "./EventListAttendee";
 import { Link } from "react-router-dom";
+import { format } from "date-fns";
 
 class EventListItem extends Component {
   render() {
@@ -11,11 +12,16 @@ class EventListItem extends Component {
         <Segment>
           <Item.Group>
             <Item>
-              <Item.Image size='tiny' circular src={event.hostPhotoURL} />
-              <Item.Content>
-                <Item.Header as='a'>{event.title}</Item.Header>
+            <Responsive minWidth={720}>
+              <Item.Image style={{margin:".5em"}} size='tiny' circular src={event.hostPhotoURL} />
+            </Responsive>  
+              <Item.Content style={{margin:".5em"}} >
+                <Item.Header >{event.title}</Item.Header>
                 <Item.Description>Hosted by {event.hostedBy}</Item.Description>
-                <Item.Description>{event.date}</Item.Description>
+                <Item.Description>
+                  {format(event.date.toDate(), "EEEE do LLLL")} at{" "}
+                  {format(event.date.toDate(), "h:mm a")}
+                </Item.Description>
                 {event.cancelled && (
                   <Label
                     style={{ top: "-30px" }}
@@ -24,13 +30,13 @@ class EventListItem extends Component {
                     content='This Event has been Cancelled'
                   />
                 )}
-              </Item.Content>
+              </Item.Content> 
             </Item>
           </Item.Group>
         </Segment>
         <Segment secondary>
           <List horizontal>
-            {/* firebase db saves attendees as object not array  */}
+            {/* firebase db saves attendees as object  */}
             {/* index === index of array in db */}
             {event.attendees &&
               Object.values(event.attendees).map((attendee, index) => (
@@ -39,12 +45,14 @@ class EventListItem extends Component {
           </List>
         </Segment>
         <Segment clearing>
-          <span>{event.description}</span>
-
-          <Button
+          <div>
+            <span>{event.description}</span>
+          </div>      
+          <Button 
+            style={{margin:"1.5em"}}
             as={Link}
             to={`/events/${event.id}`}
-            color='teal'
+            color= "blue"
             floated='right'
             content='View The Event Details'
           />
