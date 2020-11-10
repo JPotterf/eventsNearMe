@@ -6,6 +6,6 @@ It is a minimum viable product of an event tracker web app in the same vein as M
 The app consumes an API provided by the City of Helsinki. Each point represents a cultural landmark that also serves as an area where events are often held. More information about the API can be found here: https://dev.hel.fi/apis/linked-events/   
 
 
-You can find a live version at https://helsinkievents.app
+You can find a live version at https://eventsnearme-e5981.web.app/
 
 If you have any questions please feel free to reach out to me. Thanks
